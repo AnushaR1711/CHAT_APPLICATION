@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ChatWave - A modern real-time chat application. Connect, collaborate, and communicate with your team instantly.">
+    <meta name="theme-color" content="#6C63FF">
+    <title>ChatWave — Real-Time Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+
+        <!-- ======= AUTH SCREEN ======= -->
+        <div id="authScreen" class="screen active">
+            <div class="auth-bg">
+                <div class="auth-blob blob-1"></div>
+                <div class="auth-blob blob-2"></div>
+                <div class="auth-blob blob-3"></div>
+            </div>
+            <div class="auth-wrapper">
+                <!-- Left panel -->
+                <div class="auth-hero">
+                    <div class="auth-logo">
+                        <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+                        <span class="logo-text">ChatWave</span>
+                    </div>
+                    <h1 class="auth-hero-title">Connect &amp; Chat<br><span class="gradient-text">In Real Time</span></h1>
+                    <p class="auth-hero-sub">Join thousands of users already chatting. Create rooms, send private messages, and stay connected.</p>
+                    <div class="auth-features">
+                        <div class="feature-pill"><i class="fas fa-shield-alt"></i> End-to-end secure</div>
+                        <div class="feature-pill"><i class="fas fa-bolt"></i> Instant delivery</div>
+                        <div class="feature-pill"><i class="fas fa-users"></i> Group rooms</div>
+                    </div>
+                </div>
+
+                <!-- Right panel — form card -->
+                <div class="auth-card">
+                    <div class="auth-tabs" role="tablist">
+                        <button class="tab-btn active" data-tab="login" id="tab-login" role="tab" aria-selected="true">Sign In</button>
+                        <button class="tab-btn" data-tab="register" id="tab-register" role="tab" aria-selected="false">Sign Up</button>
+                        <div class="tab-slider"></div>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm" class="auth-form active" autocomplete="off">
+                        <div class="form-group">
+                            <label for="loginEmail">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+                                <button type="button" class="toggle-password" tabindex="-1" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block" id="loginSubmitBtn">
+                            <span class="btn-text"><i class="fas fa-sign-in-alt"></i> Sign In</span>
+                            <span class="btn-loader hidden"><i class="fas fa-spinner fa-spin"></i></span>
+                        </button>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="registerForm" class="auth-form" autocomplete="off">
+                        <div class="form-group">
+                            <label for="registerUsername">Username</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="registerUsername" placeholder="Choose a username" required autocomplete="username" minlength="3" maxlength="30">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="registerEmail" placeholder="you@example.com" required autocomplete="email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="registerPassword" placeholder="Min. 6 characters" required autocomplete="new-password" minlength="6">
+                                <button type="button" class="toggle-password" tabindex="-1" aria-label="Toggle password visibility">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="password-strength" id="passwordStrength">
+                                <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                                <span class="strength-label" id="strengthLabel">Strength</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block" id="registerSubmitBtn">
+                            <span class="btn-text"><i class="fas fa-user-plus"></i> Create Account</span>
+                            <span class="btn-loader hidden"><i class="fas fa-spinner fa-spin"></i></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======= CHAT SCREEN ======= -->
+        <div id="chatScreen" class="screen">
+            <div class="chat-layout">
+
+                <!-- ---- SIDEBAR ---- -->
+                <aside class="sidebar" id="sidebar">
+                    <!-- Sidebar Header -->
+                    <div class="sidebar-header">
+                        <div class="brand">
+                            <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+                            <span class="brand-name">ChatWave</span>
+                        </div>
+                        <button id="sidebarToggleBtn" class="icon-btn" title="Toggle sidebar" aria-label="Toggle sidebar">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+
+                    <!-- Current User Profile -->
+                    <div class="profile-card">
+                        <div class="profile-avatar" id="sidebarAvatar">A</div>
+                        <div class="profile-info">
+                            <div class="profile-name" id="sidebarUsername">Loading...</div>
+                            <div class="profile-status online" id="sidebarStatus">
+                                <span class="status-dot"></span> Online
+                            </div>
+                        </div>
+                        <button id="logoutBtn" class="icon-btn danger-hover" title="Sign Out" aria-label="Sign out">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="search-bar-wrapper">
+                        <div class="search-bar">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="sidebarSearch" placeholder="Search rooms or people…" autocomplete="off" aria-label="Search rooms or people">
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Tabs -->
+                    <div class="sidebar-tabs" role="tablist">
+                        <button class="sidebar-tab active" data-tab="rooms" id="sidebarTabRooms" role="tab">
+                            <i class="fas fa-hashtag"></i> Rooms
+                            <span class="tab-badge" id="roomsBadge"></span>
+                        </button>
+                        <button class="sidebar-tab" data-tab="users" id="sidebarTabUsers" role="tab">
+                            <i class="fas fa-user-friends"></i> People
+                            <span class="tab-badge online-badge" id="onlineBadge">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Rooms List -->
+                    <div id="roomsList" class="sidebar-panel active">
+                        <div class="panel-header">
+                            <span class="panel-title">Chat Rooms</span>
+                            <button id="createRoomBtn" class="icon-btn accent" title="Create new room" aria-label="Create new room">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div id="roomsContainer" class="panel-items" role="list"></div>
+                        <div id="roomsEmpty" class="empty-state hidden">
+                            <i class="fas fa-hashtag"></i>
+                            <p>No rooms yet.<br>Create one to get started!</p>
+                        </div>
+                    </div>
+
+                    <!-- Users List -->
+                    <div id="usersList" class="sidebar-panel">
+                        <div class="panel-header">
+                            <span class="panel-title">People</span>
+                            <span class="online-count" id="onlineCount">0 online</span>
+                        </div>
+                        <div id="usersContainer" class="panel-items" role="list"></div>
+                        <div id="usersEmpty" class="empty-state hidden">
+                            <i class="fas fa-user-slash"></i>
+                            <p>No other users found.</p>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- ---- MAIN CONTENT ---- -->
+                <main class="main-content">
+
+                    <!-- Welcome State -->
+                    <div id="welcomeMessage" class="welcome-state">
+                        <div class="welcome-inner">
+                            <div class="welcome-icon"><i class="fas fa-comments"></i></div>
+                            <h2>Welcome to ChatWave</h2>
+                            <p>Select a room or a person from the sidebar to start chatting in real time.</p>
+                            <button class="btn btn-primary" id="welcomeCreateRoomBtn">
+                                <i class="fas fa-plus"></i> Create a Room
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Active Chat -->
+                    <div id="chatContent" class="chat-content hidden">
+
+                        <!-- Chat Header -->
+                        <header class="chat-header">
+                            <button id="mobileSidebarBtn" class="icon-btn mobile-only" aria-label="Open sidebar">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <div class="chat-header-avatar" id="chatHeaderAvatar">#</div>
+                            <div class="chat-header-info">
+                                <h2 class="chat-title" id="chatTitle">Room Name</h2>
+                                <span class="chat-subtitle" id="chatParticipants">public room</span>
+                            </div>
+                            <div class="chat-header-actions">
+                                <button class="icon-btn" id="chatSearchBtn" title="Search messages" aria-label="Search messages">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                <button class="icon-btn" id="chatInfoBtn" title="Chat info" aria-label="Chat info">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </div>
+                        </header>
+
+                        <!-- Message Search Bar (hidden by default) -->
+                        <div id="msgSearchBar" class="msg-search-bar hidden">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="msgSearchInput" placeholder="Search messages…" autocomplete="off" aria-label="Search messages">
+                            <button class="icon-btn" id="closeMsgSearch" aria-label="Close search">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- Messages -->
+                        <div id="messagesContainer" class="messages-area" role="log" aria-live="polite" aria-label="Chat messages">
+                            <div id="messagesLoading" class="messages-loading hidden">
+                                <i class="fas fa-spinner fa-spin"></i> Loading messages…
+                            </div>
+                        </div>
+
+                        <!-- Typing indicator -->
+                        <div id="typingIndicator" class="typing-indicator hidden" aria-live="polite">
+                            <div class="typing-dots"><span></span><span></span><span></span></div>
+                            <span class="typing-text" id="typingText">Someone is typing</span>
+                        </div>
+
+                        <!-- Message Input Area -->
+                        <div class="input-area">
+                            <button class="icon-btn" id="emojiBtn" title="Emoji" aria-label="Open emoji picker">
+                                <i class="far fa-smile"></i>
+                            </button>
+                            <div class="message-input-wrapper">
+                                <textarea
+                                    id="messageInput"
+                                    class="message-textarea"
+                                    placeholder="Type a message…"
+                                    rows="1"
+                                    autocomplete="off"
+                                    aria-label="Message input"
+                                    maxlength="2000"
+                                ></textarea>
+                            </div>
+                            <button class="send-btn" id="sendMessageBtn" aria-label="Send message" title="Send (Enter)">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+
+                        <!-- Emoji Picker -->
+                        <div id="emojiPicker" class="emoji-picker hidden" role="dialog" aria-label="Emoji picker">
+                            <div class="emoji-search">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="emojiSearch" placeholder="Search emoji…" autocomplete="off" aria-label="Search emoji">
+                            </div>
+                            <div class="emoji-categories">
+                                <button class="emoji-cat active" data-cat="smileys" title="Smileys">😀</button>
+                                <button class="emoji-cat" data-cat="gestures" title="Gestures">👍</button>
+                                <button class="emoji-cat" data-cat="people" title="People">👨</button>
+                                <button class="emoji-cat" data-cat="animals" title="Animals">🐶</button>
+                                <button class="emoji-cat" data-cat="food" title="Food">🍎</button>
+                                <button class="emoji-cat" data-cat="travel" title="Travel">✈️</button>
+                                <button class="emoji-cat" data-cat="objects" title="Objects">💡</button>
+                                <button class="emoji-cat" data-cat="symbols" title="Symbols">❤️</button>
+                            </div>
+                            <div id="emojiGrid" class="emoji-grid"></div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- ---- CHAT INFO PANEL ---- -->
+                <div id="infoPanel" class="info-panel hidden">
+                    <div class="info-panel-header">
+                        <h3>Details</h3>
+                        <button class="icon-btn" id="closeInfoPanel" aria-label="Close info panel"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="info-panel-body">
+                        <div class="info-avatar" id="infoPanelAvatar">#</div>
+                        <div class="info-name" id="infoPanelName">Room</div>
+                        <div class="info-sub" id="infoPanelSub">public room</div>
+                        <div class="info-stats">
+                            <div class="info-stat">
+                                <div class="stat-value" id="infoPanelMsgCount">—</div>
+                                <div class="stat-label">Messages</div>
+                            </div>
+                            <div class="info-stat">
+                                <div class="stat-value" id="infoPanelMemberCount">—</div>
+                                <div class="stat-label">Members</div>
+                            </div>
+                        </div>
+                        <div class="info-section-title">Description</div>
+                        <div class="info-desc" id="infoPanelDesc">No description provided.</div>
+                        <div class="info-section-title" id="infoPanelMembersTitle" style="display:none">Members</div>
+                        <div id="infoPanelMembersList" class="info-members-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======= CREATE ROOM MODAL ======= -->
+        <div id="createRoomModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="createRoomModalTitle">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3 id="createRoomModalTitle"><i class="fas fa-hashtag"></i> Create a New Room</h3>
+                    <button id="closeModal" class="icon-btn" aria-label="Close modal"><i class="fas fa-times"></i></button>
+                </div>
+                <form id="createRoomForm" autocomplete="off">
+                    <div class="form-group">
+                        <label for="roomName">Room Name <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-hashtag input-icon"></i>
+                            <input type="text" id="roomName" placeholder="e.g. general, design, dev" required maxlength="50">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="roomDescription">Description <span class="optional">(optional)</span></label>
+                        <textarea id="roomDescription" rows="3" placeholder="What is this room about?" maxlength="200"></textarea>
+                        <span class="char-count" id="descCharCount">0 / 200</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="roomType">Room Type</label>
+                        <div class="type-chooser">
+                            <label class="type-option">
+                                <input type="radio" name="roomType" value="public" checked>
+                                <div class="type-card">
+                                    <i class="fas fa-globe"></i>
+                                    <span>Public</span>
+                                    <small>Anyone can join</small>
+                                </div>
+                            </label>
+                            <label class="type-option">
+                                <input type="radio" name="roomType" value="private">
+                                <div class="type-card">
+                                    <i class="fas fa-lock"></i>
+                                    <span>Private</span>
+                                    <small>Invite only</small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" id="cancelCreateRoom" class="btn btn-ghost">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="createRoomSubmitBtn">
+                            <i class="fas fa-plus"></i> Create Room
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ======= TOAST CONTAINER ======= -->
+        <div id="toastContainer" class="toast-container" role="alert" aria-live="assertive" aria-atomic="true"></div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
